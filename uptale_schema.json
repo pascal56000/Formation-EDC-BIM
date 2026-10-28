@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UptaleModuleScript",
+  "description": "Structure de données pivot pour scénario VR Uptale exportable depuis votre application de planification",
+  "type": "object",
+  "properties": {
+    "module_info": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "author": { "type": "string" },
+        "language": { "type": "string", "default": "fr" },
+        "version": { "type": "string", "default": "1.0" },
+        "total_estimated_duration_min": { "type": "integer" }
+      },
+      "required": ["title"]
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "scene_id": { "type": "string" },
+          "title": { "type": "string" },
+          "media_type": { "type": "string", "enum": ["photo_360", "video_360", "3d_environment"] },
+          "media_file": { "type": "string" },
+          "initial_view": {
+            "type": "object",
+            "properties": {
+              "yaw": { "type": "number" },
+              "pitch": { "type": "number" }
+            }
+          },
+          "voiceover": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "audio_file": { "type": "string" },
+              "auto_play": { "type": "boolean", "default": true }
+            }
+          },
+          "hotspots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "hotspot_id": { "type": "string" },
+                "title": { "type": "string" },
+                "type": { "type": "string", "enum": ["info_tag", "quiz_question", "scene_link", "audio_note", "score_trigger"] },
+                "position": {
+                  "type": "object",
+                  "properties": {
+                    "yaw": { "type": "number" },
+                    "pitch": { "type": "number" }
+                  }
+                },
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "text": { "type": "string" },
+                    "image_url": { "type": "string" },
+                    "target_scene_id": { "type": "string" },
+                    "quiz": {
+                      "type": "object",
+                      "properties": {
+                        "question": { "type": "string" },
+                        "question_type": { "type": "string", "enum": ["single_choice", "multiple_choice", "true_false"] },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": { "type": "string" },
+                              "text": { "type": "string" },
+                              "is_correct": { "type": "boolean" },
+                              "feedback": { "type": "string" }
+                            },
+                            "required": ["id", "text", "is_correct"]
+                          }
+                        },
+                        "points": { "type": "integer", "default": 10 },
+                        "explanation": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "required": ["hotspot_id", "title", "type"]
+            }
+          }
+        },
+        "required": ["scene_id", "title", "media_type"]
+      }
+    }
+  },
+  "required": ["module_info", "scenes"]
+}
